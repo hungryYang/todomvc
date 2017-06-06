@@ -1,21 +1,35 @@
-import React from 'react'
+import React,{Component} from 'react'
+import {toggleTodo,removeTodo} from '../actions.js'
+import {connect} from 'react-redux'
 
-const TodoItem = ({onToggle,onRemove,completed,text})=>{
-    const checkedProp = completed?{checked:true}:{}
+class TodoItem extends Component{
+    constructor(){
+        super(...arguments)
+    }
 
-    return (
-        <li
-        className="todo-item"
-        style={{
-            textDecoration: completed ? 'line-through' : 'none'
-        }}
-        >
-            <input type="checkbox" className="onToggle" {...checkedProp} readOnly onClick={onToggle}/>
-            <label className="text">{text}</label>
-            <button className="remove" onClick={onRemove}>x</button>
-        </li>
-    )
-   
+    render(){
+        const {onToggle,onRemove,completed,text} = this.props
+        console.log('enter TodoItem render: ' + text);
+        return (
+            <li className = "todo-item"
+            style={{
+                textDecoration: completed ? 'line-through' : 'none'
+            }}
+            >   
+                <input type="checkbox" className="tooggle" checked={completed ? "checked" : ""} readOnly onClick={onToggle}/>
+                <label className="text">{text}</label>
+                <button className="remove" onClick={onRemove}>x</button>
+            </li>
+        )
+    }
 }
 
-export default TodoItem;
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const {id} = ownProps;
+  return {
+    onToggle: () => dispatch(toggleTodo(id)),
+    onRemove: () => dispatch(removeTodo(id))
+  }
+};
+
+export default connect(null,mapDispatchToProps)(TodoItem);
